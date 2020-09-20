@@ -5,6 +5,7 @@ from datetime import datetime
 
 import requests
 from flask import Flask, request
+from pprint import pformat
 
 app = Flask(__name__)
 
@@ -79,13 +80,21 @@ def send_message(recipient_id, message_text):
         log(r.text)
 
 
+def spotify_url(url):
+
+    response = requests.get(url)
+
+    log(response)
+    log(response.content)
+
+
 def log(msg, *args, **kwargs):  # simple wrapper for logging to stdout on heroku
     try:
         if type(msg) is dict:
             msg = json.dumps(msg)
         else:
             msg = str(msg).format(*args, **kwargs)
-        print("{}: {}".format(datetime.now(), msg))
+        pformat("{}: {}".format(datetime.now(), msg))
     except UnicodeEncodeError:
         pass  # squash logging errors in case of non-ascii text
     sys.stdout.flush()
